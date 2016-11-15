@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from constants import CONN_STATUS
+from status import status
 import mysql.connector
 
 class mySQLace:
@@ -31,16 +31,15 @@ class mySQLace:
         try:
             self.cnx = mysql.connector.connect(**config)
 
-            self.status = CONN_STATUS.CONNECTED
+            self.status.setConnected()
         except mysql.connector.Error as err:
-            self.status = CONN_STATUS.FAILED
-            self.status_msg = err
+            self.status.setFailed(err)
         else:
             self.cnx.close()
 
     def disconnect(self):
         self.cnx.close()
-        self.status = CONN_STATUS.READY
+        self.status.setReady()
 
     def __init__(self):
-        self.status = CONN_STATUS.READY
+        self.status = status()
